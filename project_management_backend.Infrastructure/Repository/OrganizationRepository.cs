@@ -1,4 +1,5 @@
-using project_management_backend.Domain.Entities.Organization;
+using project_management_backend.Application.Repository;
+using project_management_backend.Domain.Organization;
 
 namespace project_management_backend.Infrastructure.Repository
 {
