@@ -1,5 +1,7 @@
 using project_management_backend.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using project_management_backend.Infrastructure.Repository;
+using project_management_backend.Application.Repository;
 
 namespace ProjectManagementBackend.Api.Extension;
 
@@ -15,6 +17,9 @@ public static class ServiceCollectionExtension
         var connectionString = configuration.GetConnectionString("ProjectManagementConnectionString");
 
         services.AddDbContext<ProjectManagementDbContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+
         return services;
     }
 }

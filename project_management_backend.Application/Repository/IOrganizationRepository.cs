@@ -1,4 +1,6 @@
-namespace project_management_backend.Domain.Organization
+using project_management_backend.Domain.Organization;
+
+namespace project_management_backend.Application.Repository
 {
     public interface IOrganizationRepository
     {
