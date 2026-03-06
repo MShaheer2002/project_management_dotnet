@@ -1,4 +1,4 @@
-using project_management_backend.Infrastructure.Data;
+using project_management_backend.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace ProjectManagementBackend.Api.Extension;

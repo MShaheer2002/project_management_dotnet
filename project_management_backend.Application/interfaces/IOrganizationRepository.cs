@@ -1,4 +1,4 @@
-namespace project_management_backend.Domain.Organization
+namespace project_management_backend.Domain.Entities.Organization
 {
     public interface IOrganizationRepository
     {

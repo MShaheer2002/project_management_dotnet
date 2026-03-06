@@ -1,4 +1,4 @@
-namespace project_management_backend.Domain.Project
+namespace project_management_backend.Domain.Entities.Project
 {
     public class Project 
     {

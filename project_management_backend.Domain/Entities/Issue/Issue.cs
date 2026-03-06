@@ -1,4 +1,4 @@
-namespace project_management_backend.Domain.Issues
+namespace project_management_backend.Domain.Entities.Issues
 {
     public class Issue
     {

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using project_management_backend.Domain.Issues;
-using project_management_backend.Domain.Organization;
-using project_management_backend.Domain.Project;
+using project_management_backend.Domain.Entities.Issues;
+using project_management_backend.Domain.Entities.Organization;
+using project_management_backend.Domain.Entities.Project;
 
-namespace project_management_backend.Infrastructure.Data
+namespace project_management_backend.Infrastructure.Persistence
 {
     public class ProjectManagementDbContext : DbContext
     {

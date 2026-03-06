@@ -1,6 +1,5 @@
-using System.Data.Common;
 
-namespace project_management_backend.Domain.Organization
+namespace project_management_backend.Domain.Entities.Organization
 {
     public class Organization
     {
