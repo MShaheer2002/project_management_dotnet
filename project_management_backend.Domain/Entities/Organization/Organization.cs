@@ -15,7 +15,7 @@ namespace project_management_backend.Domain.Entities.Organization
 
 
         public DateTime? CreatedAt { get; private set; }
-            public DateTime? UpdatedAt { get; private set; }
+        public DateTime? UpdatedAt { get; private set; }
 
         private Organization() { } // for EF
         public Organization(string name, string slug, Guid ownerUserId)
@@ -32,7 +32,7 @@ namespace project_management_backend.Domain.Entities.Organization
             OwnerUserId = ownerUserId;
             CreatedAt = DateTime.UtcNow;
 
-            _members.Add(new OrganizationMember(ownerUserId, OrganizationRole.Owner));
+            _members.Add(new OrganizationMember(ownerUserId, organizationId: Id, OrganizationRole.Owner));
         }
 
         public void AddMember(Guid userId, OrganizationRole role)
@@ -40,7 +40,7 @@ namespace project_management_backend.Domain.Entities.Organization
             if (_members.Any(x => x.UserId == userId))
                 throw new InvalidOperationException("User already a member.");
 
-            _members.Add(new OrganizationMember(userId, role));
+            _members.Add(new OrganizationMember(userId: userId, organizationId: Id, role: role));
         }
 
         public void RemoveMember(Guid userId)

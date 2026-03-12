@@ -1,6 +1,6 @@
 using project_management_backend.Domain.Entities.Organization;
 
-namespace project_management_backend.Application.Repository
+namespace project_management_backend.Application.Interface
 {
     public interface IOrganizationRepository
     {
@@ -10,6 +10,7 @@ namespace project_management_backend.Application.Repository
         Task<List<Organization?>> GetAllOrganizationsAsync();
         Task<Organization> UpdateAllOrganizationAsync();
 
+        Task<bool> IsSlugAvaibleAsync(string slug);
 
     }
 }

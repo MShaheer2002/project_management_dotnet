@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using project_management_backend.Application.common.responses;
 using project_management_backend.Application.Dto;
-using project_management_backend.Application.Repository;
-using project_management_backend.Domain.Organization;
-using project_management_backend.Infrastructure.Data;
+using project_management_backend.Application.Interface;
+using project_management_backend.Infrastructure.Persistence;
 
 namespace project_management_backend.api.controller
 {
@@ -34,6 +34,16 @@ namespace project_management_backend.api.controller
             }).ToListAsync();
 
             return Ok(organizationDto);
+        }
+
+        [HttpGet("slug-availability")]
+        public async Task<IActionResult> SlugAvailability(string slug)
+        {
+            var avaible = await organizationRepository.IsSlugAvaibleAsync(slug);
+
+            var response = new ApiResponse<Object>(true, new { slug, avaible }, "workspace url available");
+            return Ok(response);
+
         }
     };
 }

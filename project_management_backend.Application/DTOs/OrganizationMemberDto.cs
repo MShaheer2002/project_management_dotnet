@@ -1,4 +1,6 @@
 
+using project_management_backend.Domain.Entities.Organization;
+
 namespace project_management_backend.Domain.Organization
 {
     public class OrganizationMemberDto
