@@ -1,7 +1,7 @@
 
 using project_management_backend.Domain.Entities.Organization;
 
-namespace project_management_backend.Domain.Organization
+namespace project_management_backend.Application.Dto.Organization
 {
     public class OrganizationMemberDto
     {

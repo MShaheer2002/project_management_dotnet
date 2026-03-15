@@ -45,3 +45,5 @@ desktop.ini
 $RECYCLE.BIN/
 .DS_Store
 
+# Environments
+.env

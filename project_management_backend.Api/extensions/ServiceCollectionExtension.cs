@@ -4,6 +4,7 @@ using project_management_backend.Infrastructure.Repository;
 using project_management_backend.Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using project_management_backend.Application.common.responses;
+using project_management_backend.Application.Services;
 
 namespace ProjectManagementBackend.Api.Extension;
 
@@ -22,6 +23,7 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IJwtService,JwtService>();
 
         return services;
     }

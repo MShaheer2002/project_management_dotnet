@@ -10,6 +10,8 @@ public static class ApplicationBuilderExtension
             app.UseSwaggerUI();
         }
         app.UseHttpsRedirection();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.MapControllers();
 
         return app;

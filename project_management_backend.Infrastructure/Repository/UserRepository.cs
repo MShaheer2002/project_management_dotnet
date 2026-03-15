@@ -66,9 +66,15 @@ namespace project_management_backend.Infrastructure.Repository
 
         }
 
-        public Task<IReadOnlyList<User>> SearchOrganizationUsersAsync(Guid organizationId, string searchTerm)
+        public async Task<IReadOnlyList<User>> SearchOrganizationUsersAsync(Guid organizationId, string searchTerm)
         {
-            throw new NotImplementedException();
+            var user = await dbContext.OrganizationMembers.Where(
+                m => m.OrganizationId == organizationId &&
+                 (m.User.FirstName.Contains(searchTerm) ||
+                 m.User.LastName == null ? false : m.User.LastName.Contains(searchTerm) ||
+                 m.User.Email.Contains(searchTerm))).Select(m => m.User).ToListAsync();
+
+            return user;
         }
 
         public async Task<User?> SetUserActiveStatusAsync(Guid userId, bool isActive)
@@ -80,7 +86,7 @@ namespace project_management_backend.Infrastructure.Repository
             return userInDb;
         }
 
-        public async Task<User?> UpdateUserAsync(Guid Id,UpdateRequestDto user)
+        public async Task<User?> UpdateUserAsync(Guid Id, UpdateRequestDto user)
         {
             var userInDb = await dbContext.User.FindAsync(Id);
             if (userInDb == null) return null;

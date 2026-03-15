@@ -1,4 +1,6 @@
 
+using System.Text.RegularExpressions;
+
 namespace project_management_backend.Domain.Entities.Organization
 {
     public class Organization
@@ -13,8 +15,7 @@ namespace project_management_backend.Domain.Entities.Organization
         private readonly List<OrganizationMember> _members = new();
         public IReadOnlyCollection<OrganizationMember> Members => _members.AsReadOnly();
 
-
-        public DateTime? CreatedAt { get; private set; }
+        public DateTime CreatedAt { get; private set; }
         public DateTime? UpdatedAt { get; private set; }
 
         private Organization() { } // for EF
@@ -25,6 +26,10 @@ namespace project_management_backend.Domain.Entities.Organization
 
             if (string.IsNullOrWhiteSpace(slug))
                 throw new ArgumentException("Organization must have a slug.");
+
+            if (!Regex.IsMatch(slug, "^[a-z0-9-]+$"))
+                throw new ArgumentException("Slug must contain only lowercase letters, numbers, and hyphens.");
+
 
             Id = Guid.NewGuid();
             Name = name;
@@ -41,6 +46,9 @@ namespace project_management_backend.Domain.Entities.Organization
                 throw new InvalidOperationException("User already a member.");
 
             _members.Add(new OrganizationMember(userId: userId, organizationId: Id, role: role));
+
+            UpdatedAt = DateTime.UtcNow;
+
         }
 
         public void RemoveMember(Guid userId)
@@ -51,6 +59,9 @@ namespace project_management_backend.Domain.Entities.Organization
 
             if (member.Role == OrganizationRole.Owner)
                 throw new InvalidOperationException("Cannot remove owner.");
+
+            UpdatedAt = DateTime.UtcNow;
+
 
             _members.Remove(member);
         }
@@ -74,7 +85,5 @@ namespace project_management_backend.Domain.Entities.Organization
     {
         Active,
         Suspended,
-
-
     }
 }
