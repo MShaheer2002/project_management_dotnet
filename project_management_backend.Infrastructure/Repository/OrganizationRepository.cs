@@ -1,8 +1,6 @@
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using project_management_backend.Application.Interface;
 using project_management_backend.Domain.Entities.Organization;
-using project_management_backend.Domain.Entities.User;
 using project_management_backend.Infrastructure.Persistence;
 
 namespace project_management_backend.Infrastructure.Repository
@@ -35,9 +33,9 @@ namespace project_management_backend.Infrastructure.Repository
             throw new NotImplementedException();
         }
 
-        public Task<List<Organization?>> GetAllAsync()
+        public async Task<List<Organization>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await dbContext.Organizations.Include(o => o.Owner).ToListAsync() ?? [];
         }
 
         public Task<Organization> GetByIdAsync(Guid organizationId)

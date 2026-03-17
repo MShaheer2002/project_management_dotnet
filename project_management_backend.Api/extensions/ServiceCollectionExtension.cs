@@ -23,7 +23,16 @@ public static class ServiceCollectionExtension
 
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IOrganizationMemberRepository,OrganizationMemberRepository>();
         services.AddScoped<IJwtService,JwtService>();
+
+        services.AddSingleton<IEmailService>(new SmtpEmailService(
+            host: configuration["SMTP:HOST"] ?? "smtp.gmail.com",
+            port: int.TryParse(configuration["SMTP:PORT"], out var port) ? port : 587,
+            user: configuration["SMTP:USER"] ?? "your-email@gmail.com",
+            pass: configuration["SMTP:PASS"] ?? "your-app-password",
+            fromEmail: configuration["SMTP:FROM_EMAIL"] ?? "your-email@gmail.com"
+        ));
 
         return services;
     }

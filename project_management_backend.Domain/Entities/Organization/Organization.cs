@@ -1,5 +1,6 @@
 
 using System.Text.RegularExpressions;
+using project_management_backend.Domain.Entities.Users;
 
 namespace project_management_backend.Domain.Entities.Organization
 {
@@ -10,6 +11,7 @@ namespace project_management_backend.Domain.Entities.Organization
         public string? Slug { get; private set; }
 
         public Guid OwnerUserId { get; private set; }
+        public User Owner { get;  set; } // EF navigation property
         public OrganizationStatus Status { get; private set; }
         public DateTime? TrialEndAt { get; private set; }
         private readonly List<OrganizationMember> _members = new();

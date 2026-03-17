@@ -1,6 +1,6 @@
 using project_management_backend.Application.Dto.user;
 using project_management_backend.Domain.Entities.Organization;
-using project_management_backend.Domain.Entities.User;
+using project_management_backend.Domain.Entities.Users;
 
 namespace project_management_backend.Application.Interface
 {

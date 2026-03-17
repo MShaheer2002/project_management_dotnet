@@ -2,6 +2,8 @@ namespace project_management_backend.Application.Dto.user
 {
     public class GetUserResponseDto
     {
+       
+        public Guid Id { get; set; }
         public required string FirstName { get; set; }
         public string? LastName { get; set; }
         public required string UserName { get; set; }

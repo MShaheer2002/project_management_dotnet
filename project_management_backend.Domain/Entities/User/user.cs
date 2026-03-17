@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
 using project_management_backend.Domain.Entities.Organization;
 
-namespace project_management_backend.Domain.Entities.User
+namespace project_management_backend.Domain.Entities.Users
 {
     public class User
     {

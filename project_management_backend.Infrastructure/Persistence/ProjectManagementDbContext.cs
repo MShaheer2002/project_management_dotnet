@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using project_management_backend.Domain.Entities.Issues;
 using project_management_backend.Domain.Entities.Organization;
 using project_management_backend.Domain.Entities.Project;
-using project_management_backend.Domain.Entities.User;
+using project_management_backend.Domain.Entities.Users;
 
 namespace project_management_backend.Infrastructure.Persistence
 {
@@ -43,6 +43,32 @@ namespace project_management_backend.Infrastructure.Persistence
                 .HasOne(om => om.Organization)
                 .WithMany(o => o.Members)
                 .HasForeignKey(om => om.OrganizationId);
+
+            // Tell EF to use backing field
+            modelBuilder.Entity<Organization>()
+                .Navigation(o => o.Members)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            modelBuilder.Entity<Organization>(entity =>
+            {
+                entity.Property(o => o.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(o => o.Slug)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.HasIndex(o => o.Slug)
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<Organization>()
+                .HasOne(o => o.Owner)
+                .WithMany() // Owner may have multiple organizations
+                .HasForeignKey(o => o.OwnerUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
     }
 }
