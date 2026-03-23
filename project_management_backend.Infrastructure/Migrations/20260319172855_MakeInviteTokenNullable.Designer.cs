@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using project_management_backend.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using project_management_backend.Infrastructure.Persistence;
 namespace project_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectManagementDbContext))]
-    partial class ProjectManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260319172855_MakeInviteTokenNullable")]
+    partial class MakeInviteTokenNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,7 +72,7 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.ToTable("Issues");
                 });
 
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Organizations.Organization", b =>
+            modelBuilder.Entity("project_management_backend.Domain.Entities.Organization.Organization", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,7 +113,7 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.ToTable("Organizations");
                 });
 
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Organizations.OrganizationMember", b =>
+            modelBuilder.Entity("project_management_backend.Domain.Entities.Organization.OrganizationMember", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,77 +198,6 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Teams.Team", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("CreatedByUserId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("OrganizationId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationId");
-
-                    b.ToTable("Teams");
-                });
-
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Teams.TeamMember", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<Guid>("OrganizationMemberId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("TeamId")
-                        .HasColumnType("char(36)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrganizationMemberId");
-
-                    b.HasIndex("TeamId");
-
-                    b.ToTable("TeamMember");
-                });
-
             modelBuilder.Entity("project_management_backend.Domain.Entities.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -308,7 +240,7 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.ToTable("User");
                 });
 
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Organizations.Organization", b =>
+            modelBuilder.Entity("project_management_backend.Domain.Entities.Organization.Organization", b =>
                 {
                     b.HasOne("project_management_backend.Domain.Entities.Users.User", "Owner")
                         .WithMany()
@@ -319,9 +251,9 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Organizations.OrganizationMember", b =>
+            modelBuilder.Entity("project_management_backend.Domain.Entities.Organization.OrganizationMember", b =>
                 {
-                    b.HasOne("project_management_backend.Domain.Entities.Organizations.Organization", "Organization")
+                    b.HasOne("project_management_backend.Domain.Entities.Organization.Organization", "Organization")
                         .WithMany("Members")
                         .HasForeignKey("OrganizationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -336,42 +268,7 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Teams.Team", b =>
-                {
-                    b.HasOne("project_management_backend.Domain.Entities.Organizations.Organization", "Organization")
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Organization");
-                });
-
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Teams.TeamMember", b =>
-                {
-                    b.HasOne("project_management_backend.Domain.Entities.Organizations.OrganizationMember", "OrganizationMember")
-                        .WithMany()
-                        .HasForeignKey("OrganizationMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("project_management_backend.Domain.Entities.Teams.Team", "Team")
-                        .WithMany("Members")
-                        .HasForeignKey("TeamId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("OrganizationMember");
-
-                    b.Navigation("Team");
-                });
-
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Organizations.Organization", b =>
-                {
-                    b.Navigation("Members");
-                });
-
-            modelBuilder.Entity("project_management_backend.Domain.Entities.Teams.Team", b =>
+            modelBuilder.Entity("project_management_backend.Domain.Entities.Organization.Organization", b =>
                 {
                     b.Navigation("Members");
                 });

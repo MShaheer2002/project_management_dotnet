@@ -1,7 +1,11 @@
+
+
 using Microsoft.EntityFrameworkCore;
 using project_management_backend.Domain.Entities.Issues;
-using project_management_backend.Domain.Entities.Organization;
+using project_management_backend.Domain.Entities.Organizations;
 using project_management_backend.Domain.Entities.Project;
+using project_management_backend.Domain.Entities.TeamMembers;
+using project_management_backend.Domain.Entities.Teams;
 using project_management_backend.Domain.Entities.Users;
 
 namespace project_management_backend.Infrastructure.Persistence
@@ -21,6 +25,7 @@ namespace project_management_backend.Infrastructure.Persistence
         public DbSet<OrganizationMember> OrganizationMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Issue> Issues { get; set; }
+        public DbSet<Team> Teams { get; set; }
 
         // Fluent API configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,6 +54,10 @@ namespace project_management_backend.Infrastructure.Persistence
                 .Navigation(o => o.Members)
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
 
+            modelBuilder.Entity<Team>()
+                .Navigation(t => t.Members)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
             modelBuilder.Entity<Organization>(entity =>
             {
                 entity.Property(o => o.Name)
@@ -62,6 +71,11 @@ namespace project_management_backend.Infrastructure.Persistence
                 entity.HasIndex(o => o.Slug)
                     .IsUnique();
             });
+            modelBuilder.Entity<Team>()
+                    .HasMany(t => t.Members)
+                    .WithOne(nameof(TeamMember.Team))
+                    .HasForeignKey(nameof(TeamMember.TeamId))
+                    .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Organization>()
                 .HasOne(o => o.Owner)

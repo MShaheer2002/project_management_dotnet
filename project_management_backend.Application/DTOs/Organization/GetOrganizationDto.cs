@@ -11,8 +11,5 @@ namespace project_management_backend.Application.Dto
         public GetUserResponseDto? User { get; set; } 
         public Guid OwnerUserId { get; set; }
         public DateTime CreatedAt { get; set; }
-
-
-
     }
 }

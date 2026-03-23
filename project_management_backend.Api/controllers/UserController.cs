@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using project_management_backend.Application.common.responses;
+using project_management_backend.Application.Dto.Organization;
 using project_management_backend.Application.Dto.user;
 using project_management_backend.Application.Interface;
 using project_management_backend.Domain.Entities.Users;
@@ -160,10 +161,32 @@ namespace project_management_backend.api.controller
         }
 
         [HttpGet("/UsersInOrganization/{organizationId}")]
-        public async Task<IActionResult> UsersInOrganization([FromQuery] Guid organizationId)
+        public async Task<IActionResult> UsersInOrganization(Guid organizationId)
         {
-            var Users = await userRepository.GetOrganizationUsersAsync(organizationId);
-            return Ok(new ApiResponse<Object>(true, Users, "success"));
+            var members = await userRepository.GetOrganizationUsersAsync(organizationId);
+
+            var response = members.Select(m => new GetOrganizationMemberResponseDto
+            {
+                Id = m.Id,
+                OrganizationId = m.OrganizationId,
+                UserId = m.UserId,
+                Email = m.Email,
+                Role = m.Role,
+                IsAccepted = m.IsAccepted,
+                InvitedAt = m.InvitedAt,
+                JoinedAt = m.JoinedAt,
+                User = m.User != null ? new GetUserResponseDto
+                {
+                    Id = m.User.Id,
+                    FirstName = m.User.FirstName,
+                    LastName = m.User.LastName,
+                    UserName = m.User.UserName,
+                    AvatarUrl = m.User.AvatarUrl
+                } : null
+            }).ToList();
+
+
+            return Ok(new ApiResponse<Object>(true, response, "success"));
         }
 
         [HttpGet("/{Id}/active")]

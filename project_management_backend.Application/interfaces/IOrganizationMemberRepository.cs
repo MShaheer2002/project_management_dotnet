@@ -1,4 +1,5 @@
-using project_management_backend.Domain.Entities.Organization;
+
+using project_management_backend.Domain.Entities.Organizations;
 
 namespace project_management_backend.Application.Interface
 {
@@ -7,6 +8,6 @@ namespace project_management_backend.Application.Interface
         Task<OrganizationMember> InviteMemberAsync(Guid orgId, string email, OrganizationRole role);
         Task<OrganizationMember> AcceptInviteAsync(string token, Guid userId, string userEmail);
         Task<OrganizationMember> AddMemberDirectAsync(Guid orgId, Guid userId, OrganizationRole role);
-        Task ChangeRoleAsync(Guid memberId, OrganizationRole newRole, Guid currentUserId);
+        Task<OrganizationMember> ChangeRoleAsync(Guid memberId, OrganizationRole newRole, Guid currentUserId);
     }
 }

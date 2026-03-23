@@ -1,8 +1,9 @@
 
 using System.Text.RegularExpressions;
+using project_management_backend.Domain.Entities.Organizations;
 using project_management_backend.Domain.Entities.Users;
 
-namespace project_management_backend.Domain.Entities.Organization
+namespace project_management_backend.Domain.Entities.Organizations
 {
     public class Organization
     {
@@ -11,7 +12,7 @@ namespace project_management_backend.Domain.Entities.Organization
         public string? Slug { get; private set; }
 
         public Guid OwnerUserId { get; private set; }
-        public User Owner { get;  set; } // EF navigation property
+        public User Owner { get; set; } // EF navigation property
         public OrganizationStatus Status { get; private set; }
         public DateTime? TrialEndAt { get; private set; }
         private readonly List<OrganizationMember> _members = new();
@@ -68,17 +69,13 @@ namespace project_management_backend.Domain.Entities.Organization
             _members.Remove(member);
         }
 
-        public void Suspend()
+        public void ChangeStatus(OrganizationStatus status)
         {
-            Status = OrganizationStatus.Suspended;
+            Status = status;
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void Activate()
-        {
-            Status = OrganizationStatus.Active;
-            UpdatedAt = DateTime.UtcNow;
-        }
+       
 
 
     }
@@ -87,5 +84,6 @@ namespace project_management_backend.Domain.Entities.Organization
     {
         Active,
         Suspended,
+        Deactivated
     }
 }

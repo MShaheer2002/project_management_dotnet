@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using project_management_backend.Application.Dto.user;
 using project_management_backend.Application.Interface;
-using project_management_backend.Domain.Entities.Organization;
+using project_management_backend.Domain.Entities.Organizations;
 using project_management_backend.Domain.Entities.Users;
 using project_management_backend.Infrastructure.Persistence;
 
@@ -32,7 +32,7 @@ namespace project_management_backend.Infrastructure.Repository
             return user;
         }
 
-        public async Task<IReadOnlyList<OrganizationMember>> GetOrganizationUsersAsync(Guid organizationId)
+        public async Task<List<OrganizationMember>> GetOrganizationUsersAsync(Guid organizationId)
         {
             return await dbContext.OrganizationMembers.Where(m => m.OrganizationId == organizationId).Include(m => m.User).ToListAsync();
         }
@@ -95,5 +95,7 @@ namespace project_management_backend.Infrastructure.Repository
 
             return userInDb;
         }
+
+
     }
 }

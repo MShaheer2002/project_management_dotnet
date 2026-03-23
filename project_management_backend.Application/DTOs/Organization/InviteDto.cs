@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using project_management_backend.Domain.Entities.Organization;
+using project_management_backend.Domain.Entities.Organizations;
 
 namespace project_management_backend.Application.Dto
 {

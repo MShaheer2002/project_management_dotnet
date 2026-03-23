@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using project_management_backend.Domain.Entities.Users;
 
-namespace project_management_backend.Domain.Entities.Organization
+namespace project_management_backend.Domain.Entities.Organizations
 {
     public class OrganizationMember
     {
@@ -13,7 +13,7 @@ namespace project_management_backend.Domain.Entities.Organization
         public Guid? UserId { get; private set; } // Nullable if user hasn't accepted invite yet
         public User User { get; private set; }
         public string Email { get; private set; } // For invite
-        public string InviteToken { get; private set; } // Verification token
+        public string? InviteToken { get; private set; } // Verification token
         public bool IsAccepted { get; private set; } = false;
         public DateTime InvitedAt { get; private set; } = DateTime.UtcNow;
         public DateTime? JoinedAt { get; private set; } // When user accepts
