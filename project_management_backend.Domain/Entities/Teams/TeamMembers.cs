@@ -47,6 +47,9 @@ namespace project_management_backend.Domain.Entities.TeamMembers
 
     public enum TeamRole
     {
+        Admin,
+        Manager,
+
         Lead,
         Member
     }

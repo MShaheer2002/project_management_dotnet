@@ -14,7 +14,6 @@ namespace project_management_backend.api.controller
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class OrganizationController : ControllerBase
     {
         private readonly IOrganizationRepository organizationRepository;

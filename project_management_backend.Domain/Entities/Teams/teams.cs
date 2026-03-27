@@ -25,12 +25,13 @@ namespace project_management_backend.Domain.Entities.Teams
 
         public IReadOnlyCollection<TeamMember> Members => _members;
 
-        public void AddMember(Guid organizationMemberId, TeamRole role)
+        public TeamMember AddMember(Guid organizationMemberId, TeamRole role)
         {
             if (_members.Any(x => x.OrganizationMemberId == organizationMemberId))
                 throw new InvalidOperationException("User already in team");
-
-            _members.Add(new TeamMember(Id, organizationMemberId, role));
+            var member = new TeamMember(Id, organizationMemberId, role);
+            _members.Add(member);
+            return member;
         }
 
         private Team() { } // EF
@@ -56,14 +57,15 @@ namespace project_management_backend.Domain.Entities.Teams
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void Archive()
+        public void UpdateStatus(TeamStatus status)
         {
-            Status = TeamStatus.Archived;
+            Status = status;
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void SoftDelete()
         {
+            Status = TeamStatus.Deactived;
             DeletedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
         }
@@ -72,6 +74,7 @@ namespace project_management_backend.Domain.Entities.Teams
     public enum TeamStatus
     {
         Active,
-        Archived
+        Archived,
+        Deactived
     }
 }

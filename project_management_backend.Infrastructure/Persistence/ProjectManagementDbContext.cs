@@ -26,6 +26,8 @@ namespace project_management_backend.Infrastructure.Persistence
         public DbSet<Project> Projects { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Team> Teams { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
+
 
         // Fluent API configurations
         protected override void OnModelCreating(ModelBuilder modelBuilder)

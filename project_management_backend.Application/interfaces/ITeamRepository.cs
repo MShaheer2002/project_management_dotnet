@@ -8,16 +8,17 @@ namespace project_management_backend.Application.Interface
     public interface ITeamRepository
     {
         Task<Team> CreateTeamAsync(Team team);
-        Task<Team> AddMemberInTeamAsync(TeamMember teamMember);
-        Task<Team> UpdateTeamAsync(Team team);
-       Task<List<GetTeamResponseDto>> GetAllTeamByOrganizationAsync(Guid orgId);
+        Task<TeamMember> AddMemberInTeamAsync(Guid teamId, Guid organizationMemberId, TeamRole role);
+        Task<Team> UpdateTeamAsync(Guid Id, string Name, string Description);
+        Task<List<GetTeamResponseDto>> GetAllTeamByOrganizationAsync(Guid orgId);
         Task<Team?> GetTeamByIdAsync(Guid Id);
+        Task<Team?> GetTeamByNameAsync(string Name);
         Task<TeamMember?> GetTeamMemberByIdAsync(Guid Id);
-        Task<TeamMember?> GetTeamMemberByNameAsync(Guid Id);
-        Task<TeamMember?> GetTeamMemberByEmailAsync(Guid Id);
+        Task<List<TeamMember>> GetTeamMembersByNameAsync(Guid teamId, string name);
+        Task<TeamMember?> GetTeamMemberByEmailAsync(String email);
         Task<Team> DeleteTeamAsync(Guid Id);
-        Task<Team> ArchiveTeamAsync(Guid Id);
-        Task<Project> RemoveMemberAsync(Guid projectId, Guid teamMemberId);
+        Task<Team> UpdateStatus(Guid Id, TeamStatus status);
+        Task<TeamMember> RemoveTeamMemberAsync(Guid teamId, Guid teamMemberId);
 
     }
 }

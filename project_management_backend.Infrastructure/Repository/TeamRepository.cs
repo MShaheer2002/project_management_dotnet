@@ -1,12 +1,11 @@
 
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using project_management_backend.Application.Dto.Team;
 using project_management_backend.Application.Interface;
-using project_management_backend.Domain.Entities.Project;
 using project_management_backend.Domain.Entities.TeamMembers;
 using project_management_backend.Domain.Entities.Teams;
-using project_management_backend.Infrastructure.Migrations;
 using project_management_backend.Infrastructure.Persistence;
 
 namespace project_management_backend.Infrastructure.Repository
@@ -14,19 +13,51 @@ namespace project_management_backend.Infrastructure.Repository
     public class TeamRepository : ITeamRepository
     {
         private readonly ProjectManagementDbContext dbContext;
+        private readonly ILogger<TeamRepository> logger;
 
-        public TeamRepository(ProjectManagementDbContext dbContext)
+        public TeamRepository(ProjectManagementDbContext dbContext, ILogger<TeamRepository> logger)
         {
             this.dbContext = dbContext;
+            this.logger = logger;
         }
-        public Task<Team> AddMemberInTeamAsync(TeamMember teamMember)
+        public async Task<TeamMember> AddMemberInTeamAsync(Guid teamId, Guid organizationMemberId, TeamRole role)
         {
-            throw new NotImplementedException();
+            var team = await dbContext.Teams
+                .Include(t => t.Members)
+                .FirstOrDefaultAsync(t => t.Id == teamId);
+
+            if (team == null)
+                throw new KeyNotFoundException("Team Not Found");
+
+            // Validate OrganizationMember
+            var orgMember = await dbContext.OrganizationMembers
+                .Include(om => om.User)
+                .FirstOrDefaultAsync(om => om.Id == organizationMemberId);
+
+            if (orgMember == null)
+                throw new KeyNotFoundException("Organization Member not found");
+
+            if (orgMember.OrganizationId != team.OrganizationId)
+                throw new InvalidOperationException("Member does not belong to the same organization as the team.");
+
+            if (team.Members.Any(m => m.OrganizationMemberId == organizationMemberId))
+                throw new InvalidOperationException("Member already exists in team");
+
+            var member = team.AddMember(organizationMemberId, role);
+            await dbContext.AddAsync(member);
+            await dbContext.SaveChangesAsync();
+
+            return member;
         }
 
-        public Task<Team> ArchiveTeamAsync(Guid Id)
+        public async Task<Team> UpdateStatus(Guid Id, TeamStatus status)
         {
-            throw new NotImplementedException();
+            var team = await dbContext.Teams.FirstOrDefaultAsync(tm => tm.Id == Id);
+            if (team == null) throw new KeyNotFoundException("Team not Found!");
+
+            team.UpdateStatus(status);
+            await dbContext.SaveChangesAsync();
+            return team;
         }
 
         public async Task<Team> CreateTeamAsync(Team team)
@@ -36,9 +67,19 @@ namespace project_management_backend.Infrastructure.Repository
             return team;
         }
 
-        public Task<Team> DeleteTeamAsync(Guid Id)
+        public async Task<Team> DeleteTeamAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            var team = await dbContext.Teams
+               .Include(t => t.Members)
+               .FirstOrDefaultAsync(t => t.Id == Id);
+
+            if (team == null)
+                throw new KeyNotFoundException("Team Not Found");
+
+            team.SoftDelete();
+            await dbContext.SaveChangesAsync();
+
+            return team;
         }
 
         public async Task<List<GetTeamResponseDto>> GetAllTeamByOrganizationAsync(Guid orgId)
@@ -56,44 +97,89 @@ namespace project_management_backend.Infrastructure.Repository
 
                     TeamMembers = t.Members.Select(m => new TeamMemberResponseDto
                     {
-                        OrganizationMemberId = m.OrganizationMemberId,
+                        Id = m.Id,
                         Role = m.Role.ToString(),
-
+                        Name = m.OrganizationMember.User.FirstName,
                         UserName = m.OrganizationMember.User.UserName,
+                        avatarUrl = m.OrganizationMember.User.AvatarUrl ?? "",
                         Email = m.OrganizationMember.User.Email
                     }).ToList()
                 }).ToListAsync();
             return team;
         }
 
-        public Task<Team?> GetTeamByIdAsync(Guid Id)
+        public async Task<Team?> GetTeamByIdAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            var team = await dbContext.Teams.FirstOrDefaultAsync(tm => tm.Id == Id);
+
+            return team;
+        }
+        public async Task<Team?> GetTeamByNameAsync(string Name)
+        {
+            var team = await dbContext.Teams.FirstOrDefaultAsync(tm => tm.Name.ToLower() == Name.ToLower());
+
+            return team;
         }
 
-        public Task<TeamMember?> GetTeamMemberByEmailAsync(Guid Id)
+        public async Task<TeamMember?> GetTeamMemberByEmailAsync(String email)
         {
-            throw new NotImplementedException();
+            var teamMember = await dbContext.TeamMembers
+                .Include(tm => tm.OrganizationMember)
+                    .ThenInclude(om => om.User)
+                .FirstOrDefaultAsync(tm => tm.OrganizationMember.User.Email.ToLower() == email.ToLower());
+            return teamMember;
         }
 
-        public Task<TeamMember?> GetTeamMemberByIdAsync(Guid Id)
+        public async Task<TeamMember?> GetTeamMemberByIdAsync(Guid Id)
         {
-            throw new NotImplementedException();
+            var teamMember = await dbContext.TeamMembers
+             .Include(tm => tm.OrganizationMember)
+                 .ThenInclude(om => om.User)
+             .FirstOrDefaultAsync(tm => tm.Id == Id);
+            return teamMember;
         }
 
-        public Task<TeamMember?> GetTeamMemberByNameAsync(Guid Id)
+        public async Task<List<TeamMember>> GetTeamMembersByNameAsync(Guid teamId, string name)
         {
-            throw new NotImplementedException();
+            return await dbContext.TeamMembers
+                .Include(tm => tm.OrganizationMember)
+                    .ThenInclude(om => om.User)
+                .Where(tm =>
+                    tm.TeamId == teamId &&
+                    (
+                        tm.OrganizationMember.User.FirstName == name ||
+                        tm.OrganizationMember.User.LastName == name ||
+                        tm.OrganizationMember.User.UserName == name
+                    ))
+                .ToListAsync();
         }
 
-        public Task<Project> RemoveMemberAsync(Guid projectId, Guid teamMemberId)
+        public async Task<TeamMember> RemoveTeamMemberAsync(Guid teamId, Guid teamMemberId)
         {
-            throw new NotImplementedException();
+            var teamMember = await dbContext.TeamMembers
+                .Include(o => o.OrganizationMember)
+                .ThenInclude(u => u.User)
+                .FirstOrDefaultAsync(tm =>
+                    tm.TeamId == teamId &&
+                    tm.Id == teamMemberId);
+
+            if (teamMember == null)
+                throw new KeyNotFoundException("Team member not found");
+
+            dbContext.TeamMembers.Remove(teamMember);
+
+            await dbContext.SaveChangesAsync();
+            return teamMember;
         }
 
-        public Task<Team> UpdateTeamAsync(Team team)
+        public async Task<Team> UpdateTeamAsync(Guid Id, string Name, string Description)
         {
-            throw new NotImplementedException();
+            var Team = await dbContext.Teams.FirstOrDefaultAsync(t => t.Id == Id);
+            if (Team == null) throw new KeyNotFoundException("Team Not Found!");
+            Team.Update(Name, Description);
+            await dbContext.SaveChangesAsync();
+            return Team;
+
         }
     }
 }
