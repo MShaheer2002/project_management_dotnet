@@ -7,6 +7,7 @@ using project_management_backend.Domain.Entities.Project;
 using project_management_backend.Domain.Entities.TeamMembers;
 using project_management_backend.Domain.Entities.Teams;
 using project_management_backend.Domain.Entities.Users;
+using project_management_backend.Domain.Entities.Workspace;
 
 namespace project_management_backend.Infrastructure.Persistence
 {
@@ -27,6 +28,8 @@ namespace project_management_backend.Infrastructure.Persistence
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamMember> TeamMembers { get; set; }
+        public DbSet<Workspace> Workspace { get; set; }
+        public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
 
 
         // Fluent API configurations
