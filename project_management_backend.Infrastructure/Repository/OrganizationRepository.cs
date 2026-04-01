@@ -1,8 +1,10 @@
+using System.Transactions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using project_management_backend.Application.Interface;
 using project_management_backend.Domain.Entities.Organizations;
 using project_management_backend.Domain.Entities.Users;
+using project_management_backend.Domain.Entities.Workspace;
 using project_management_backend.Infrastructure.Persistence;
 
 namespace project_management_backend.Infrastructure.Repository
@@ -16,13 +18,33 @@ namespace project_management_backend.Infrastructure.Repository
             this.dbContext = dbContext;
         }
 
-        public async Task<Organization> CreateAsync(Organization organization)
+        public async Task<Organization> CreateAsync(
+            Organization organization,
+            OrganizationMember organizationMember,
+            Workspace workspace,
+            WorkspaceMember workspaceMember,
+            CancellationToken cancellationToken)
         {
-            await dbContext.Organizations.AddAsync(organization);
-            await dbContext.SaveChangesAsync();
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
-            return organization;
+            try
+            {
+                await dbContext.Organizations.AddAsync(organization, cancellationToken);
+                await dbContext.OrganizationMembers.AddAsync(organizationMember, cancellationToken);
+                await dbContext.Workspaces.AddAsync(workspace, cancellationToken);
+                await dbContext.WorkspaceMembers.AddAsync(workspaceMember, cancellationToken);
 
+                await dbContext.SaveChangesAsync(cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+
+                return organization;
+            }
+            catch
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                throw;
+            }
         }
 
         public async Task<Organization?> DeactiveAsync(Guid requesterId, Guid organizationId)

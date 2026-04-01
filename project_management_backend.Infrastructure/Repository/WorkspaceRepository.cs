@@ -15,7 +15,7 @@ namespace project_management_backend.Infrastructure.Repository
         }
         public async Task<Workspace> CreateAsync(Workspace workspace, CancellationToken cancellationToken)
         {
-            await dbContext.Workspace.AddAsync(workspace, cancellationToken);
+            await dbContext.Workspaces.AddAsync(workspace, cancellationToken);
             await dbContext.SaveChangesAsync(cancellationToken);
             return workspace;
         }
@@ -27,7 +27,7 @@ namespace project_management_backend.Infrastructure.Repository
 
         public async Task<bool> ExistsAsync(Guid workspaceId, CancellationToken cancellationToken)
         {
-            var exist = await dbContext.Workspace.FindAsync(workspaceId, cancellationToken);
+            var exist = await dbContext.Workspaces.FindAsync(workspaceId, cancellationToken);
 
             return exist == null ? false : true;
         }

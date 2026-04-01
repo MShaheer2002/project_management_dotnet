@@ -10,22 +10,23 @@ namespace project_management_backend.Domain.Entities.Project
         public string Description { get; private set; }
         public ProjectStatus Status { get; private set; }
         public ProjectVisibility Visibility { get; private set; }
-        public DateTime? StartDate { get; private set; }
-        public DateTime? TargetDate { get; private set; }
+        public DateTime StartDate { get; private set; }
+        public DateTime TargetDate { get; private set; }
         public Guid CreatedBy { get; private set; }
         public DateTime CreatedAt { get; private set; }
-        public DateTime? UpdatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
 
         // Navigation
         public ICollection<ProjectMember> Members { get; private set; } = new List<ProjectMember>();
 
         private Project() { }
-        public Project(Guid organizationId, Guid workspaceId, string key, string name, string description, Guid createdBy)
+        public Project(Guid organizationId, Guid workspaceId, string key, string name, string description, Guid createdBy, DateTime targetDate)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Project must have a name");
             if (string.IsNullOrWhiteSpace(key))
                 throw new ArgumentException("Project must have a key");
+
 
             Id = Guid.NewGuid();
             OrganizationId = organizationId;
@@ -37,16 +38,19 @@ namespace project_management_backend.Domain.Entities.Project
             Visibility = ProjectVisibility.Private;
             CreatedBy = createdBy;
             CreatedAt = DateTime.UtcNow;
+            StartDate =  DateTime.UtcNow;
+            TargetDate = targetDate;
+            UpdatedAt =  DateTime.UtcNow;
+
         }
 
-        public void UpdateDetails(string name, string description, DateTime? startDate, DateTime? targetDate)
+        public void UpdateDetails(string name, string description, DateTime targetDate)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Project name cannot be empty.");
 
             Name = name;
             Description = description ?? "";
-            StartDate = startDate;
             TargetDate = targetDate;
             UpdatedAt = DateTime.UtcNow;
         }

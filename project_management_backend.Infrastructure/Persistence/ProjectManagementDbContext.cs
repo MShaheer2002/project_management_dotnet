@@ -25,10 +25,11 @@ namespace project_management_backend.Infrastructure.Persistence
 
         public DbSet<OrganizationMember> OrganizationMembers { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<ProjectMember> ProjectMembers { get; set; }
         public DbSet<Issue> Issues { get; set; }
         public DbSet<Team> Teams { get; set; }
         public DbSet<TeamMember> TeamMembers { get; set; }
-        public DbSet<Workspace> Workspace { get; set; }
+        public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
 
 

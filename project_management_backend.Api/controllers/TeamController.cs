@@ -78,8 +78,8 @@ namespace project_management_backend.api.controller
             {
                 Id = result.Id,
                 Role = result.Role.ToString(),
-                UserName = result.OrganizationMember?.User?.UserName,
-                Email = result.OrganizationMember?.Email
+                UserName = result.OrganizationMember?.User?.UserName!,
+                Email = result.OrganizationMember?.Email!
             };
 
             return Ok(new ApiResponse<TeamMemberResponseDto>(true, response, "Success"));
@@ -195,8 +195,8 @@ namespace project_management_backend.api.controller
             {
                 Id = result.Id,
                 Role = result.Role.ToString(),
-                UserName = result.OrganizationMember?.User?.UserName,
-                Email = result.OrganizationMember?.Email
+                UserName = result.OrganizationMember?.User?.UserName!,
+                Email = result.OrganizationMember?.Email!
             };
 
             return Ok(new ApiResponse<TeamMemberResponseDto>(true, response, "Success"));

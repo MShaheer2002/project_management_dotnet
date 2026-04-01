@@ -1,17 +1,8 @@
+using project_management_backend.Domain.Entities.Project;
+
 namespace project_management_backend.Application.Dto.Project
 {
-    public class CreateProjectRequestDto
-    {
-        public Guid ProjectOrganizationId { get; set; }
-        public Guid WorkspaceId { get; set; }
-        required public string Name { get; set; }
-        required public string Key { get; set; }
-        required public string Description { get; set; }
-
-        public DateTime TargetDate { get; set; }
-    }
-
-    public class CreateProjectResponseDto
+    public class ResponseProjectDto
     {
         public Guid Id { get; set; }
         public Guid ProjectOrganizationId { get; set; }
@@ -25,5 +16,9 @@ namespace project_management_backend.Application.Dto.Project
         public DateTime StartDate { get; set; }
         public DateTime TargetDate { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public List<ProjectMemberResponseDto>? projectMembers { get; set; }
     }
+
+
 }

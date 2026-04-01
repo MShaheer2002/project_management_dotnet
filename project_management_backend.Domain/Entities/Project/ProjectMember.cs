@@ -1,3 +1,5 @@
+using project_management_backend.Domain.Entities.Users;
+
 namespace project_management_backend.Domain.Entities.Project
 {
     public class ProjectMember
@@ -8,8 +10,8 @@ namespace project_management_backend.Domain.Entities.Project
         public Project Project { get; private set; }
 
         public Guid OrganizationMemberId { get; private set; }
-        // Assuming you already have OrganizationMember entity
-        // public OrganizationMember OrganizationMember { get; private set; }
+        public Guid UserId { get; private set; }
+        public User User { get; private set; }
 
         public ProjectRole Role { get; private set; }
 
@@ -17,7 +19,7 @@ namespace project_management_backend.Domain.Entities.Project
 
         private ProjectMember() { } // For EF Core
 
-        public ProjectMember(Guid projectId, Guid organizationMemberId, ProjectRole role)
+        public ProjectMember(Guid projectId, Guid organizationMemberId,Guid userId ,ProjectRole role)
         {
             if (projectId == Guid.Empty)
                 throw new ArgumentException("ProjectId cannot be empty");
@@ -27,6 +29,7 @@ namespace project_management_backend.Domain.Entities.Project
 
             Id = Guid.NewGuid();
             ProjectId = projectId;
+            UserId = userId;
             OrganizationMemberId = organizationMemberId;
             Role = role;
             JoinedAt = DateTime.UtcNow;

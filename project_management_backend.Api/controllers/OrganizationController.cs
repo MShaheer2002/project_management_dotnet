@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using project_management_backend.Application.Interface;
 using project_management_backend.Infrastructure.Repository;
 using project_management_backend.Domain.Entities.Organizations;
+using project_management_backend.Domain.Entities.Workspace;
 
 namespace project_management_backend.api.controller
 {
@@ -39,13 +40,16 @@ namespace project_management_backend.api.controller
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateOrganizationRequestDto organizationRequestDto)
+        public async Task<IActionResult> Create(CreateOrganizationRequestDto organizationRequestDto, CancellationToken cancellationToken)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null) return Unauthorized();
+            var userEmail = User.FindFirstValue(ClaimTypes.Email);
+            if (userIdClaim == null || userEmail == null) return Unauthorized();
             var userId = Guid.Parse(userIdClaim);
 
-            var slug = organizationRequestDto.Slug.Trim().ToLower();
+            logger.LogInformation($"[User Email] ${userEmail}, [UserId] ${userId}");
+
+            var slug = organizationRequestDto.Slug.Trim().ToLower().Replace(" ", "-");
 
             var isSlugAvaible = await organizationRepository.IsSlugAvaibleAsync(slug);
 
@@ -57,12 +61,33 @@ namespace project_management_backend.api.controller
                 userId
             );
 
-            var createOrg = await organizationRepository.CreateAsync(org);
+            var orgMember = new OrganizationMember(
+                userId,
+                org.Id,
+                OrganizationRole.Admin,
+                userEmail
+            );
+
+            var workspace = new Workspace(
+                organizationId: org.Id,
+                name: slug,
+                createdBy: userId
+            );
+
+            var workspaceMember = new WorkspaceMember(
+                workspace.Id,
+                organizationMemberId: orgMember.Id,
+                WorkspaceRole.Admin
+            );
+
+
+
+            var createOrg = await organizationRepository.CreateAsync(org, orgMember, workspace, workspaceMember, cancellationToken);
 
             var organization = new CreateOrganizationResponseDto
             {
                 Name = createOrg.Name!,
-                Slug = createOrg.Slug!,
+                Slug = slug,
                 OwnerUserId = createOrg.OwnerUserId,
                 Id = createOrg.Id,
                 CreatedAt = createOrg.CreatedAt

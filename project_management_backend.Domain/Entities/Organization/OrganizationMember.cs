@@ -22,10 +22,11 @@ namespace project_management_backend.Domain.Entities.Organizations
         private OrganizationMember() { }
 
         // Constructor for direct add (existing user)
-        public OrganizationMember(Guid userId, Guid organizationId, OrganizationRole role)
+        public OrganizationMember(Guid userId, Guid organizationId, OrganizationRole role, string email)
         {
             Id = Guid.NewGuid();
             UserId = userId;
+            Email = email;
             OrganizationId = organizationId;
             Role = role;
             JoinedAt = DateTime.UtcNow;

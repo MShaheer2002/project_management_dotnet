@@ -21,14 +21,14 @@ namespace project_management_backend.Application.Interface
             CancellationToken cancellationToken);
 
         // UPDATE
-        Task UpdateAsync(Project project, CancellationToken cancellationToken);
+        Task UpdateAsync(Guid projectId, string name, string description, DateTime targetDate, CancellationToken cancellationToken);
 
         // DELETE (soft delete preferred)
         Task DeleteAsync(Guid projectId, CancellationToken cancellationToken);
 
         // STATUS MANAGEMENT
         Task ActivateAsync(Guid projectId, CancellationToken cancellationToken);
-        Task ArchiveAsync(Guid projectId, CancellationToken cancellationToken);
+        Task<bool> ArchiveAsync(Guid projectId, CancellationToken cancellationToken);
 
         // OPTIONAL (but useful for your UI)
         Task<Project?> GetProjectWithMembersAsync(Guid projectId, CancellationToken cancellationToken);

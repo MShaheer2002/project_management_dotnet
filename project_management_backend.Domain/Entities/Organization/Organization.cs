@@ -40,15 +40,14 @@ namespace project_management_backend.Domain.Entities.Organizations
             OwnerUserId = ownerUserId;
             CreatedAt = DateTime.UtcNow;
 
-            _members.Add(new OrganizationMember(ownerUserId, organizationId: Id, OrganizationRole.Owner));
         }
 
-        public void AddMember(Guid userId, OrganizationRole role)
+        public void AddMember(Guid userId, OrganizationRole role, string email)
         {
             if (_members.Any(x => x.UserId == userId))
                 throw new InvalidOperationException("User already a member.");
 
-            _members.Add(new OrganizationMember(userId: userId, organizationId: Id, role: role));
+            _members.Add(new OrganizationMember(userId: userId, organizationId: Id, role: role, email: email));
 
             UpdatedAt = DateTime.UtcNow;
 
@@ -75,7 +74,7 @@ namespace project_management_backend.Domain.Entities.Organizations
             UpdatedAt = DateTime.UtcNow;
         }
 
-       
+
 
 
     }
