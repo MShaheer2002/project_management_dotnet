@@ -90,7 +90,6 @@ namespace project_management_backend.Infrastructure.Repository
                     Id = t.Id,
                     Name = t.Name,
                     OrganizationId = t.OrganizationId,
-                    Description = t.Description,
                     CreatedByUserId = t.CreatedByUserId,
                     CreatedAt = t.CreatedAt,
                     Status = t.Status.ToString(),

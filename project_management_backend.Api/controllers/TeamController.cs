@@ -30,8 +30,8 @@ namespace project_management_backend.api.controller
             var createTeam = new Team(
                 organizationId: createTeamRequestDto.OrganizationId,
                 name: createTeamRequestDto.Name,
-                createdByUserId: userId,
-                description: createTeamRequestDto.Description ?? ""
+                workspaceId: createTeamRequestDto.workspaceId,
+                createdByUserId: userId
             );
 
             foreach (var member in createTeamRequestDto.Members)
@@ -46,7 +46,6 @@ namespace project_management_backend.api.controller
                 Id = created.Id,
                 OrganizationId = created.OrganizationId,
                 Name = created.Name,
-                Description = created.Description,
                 CreatedByUserId = created.CreatedByUserId,
                 Status = created.Status,
                 CreatedAt = created.CreatedAt
@@ -114,7 +113,6 @@ namespace project_management_backend.api.controller
                 Id = result.Id,
                 OrganizationId = result.OrganizationId,
                 Name = result.Name,
-                Description = result.Description,
                 Status = result.Status.ToString(),
                 CreatedByUserId = result.CreatedByUserId,
                 CreatedAt = result.CreatedAt,
@@ -141,7 +139,6 @@ namespace project_management_backend.api.controller
                 Id = result.Id,
                 OrganizationId = result.OrganizationId,
                 Name = result.Name,
-                Description = result.Description,
                 Status = result.Status.ToString(),
                 CreatedByUserId = result.CreatedByUserId,
                 CreatedAt = result.CreatedAt,
@@ -168,7 +165,6 @@ namespace project_management_backend.api.controller
                 Id = result.Id,
                 OrganizationId = result.OrganizationId,
                 Name = result.Name,
-                Description = result.Description,
                 Status = result.Status.ToString(),
                 CreatedByUserId = result.CreatedByUserId,
                 CreatedAt = result.CreatedAt,
@@ -212,7 +208,6 @@ namespace project_management_backend.api.controller
                 Id = result.Id,
                 OrganizationId = result.OrganizationId,
                 Name = result.Name,
-                Description = result.Description,
                 Status = result.Status.ToString(),
                 CreatedByUserId = result.CreatedByUserId,
                 CreatedAt = result.CreatedAt,
@@ -240,7 +235,6 @@ namespace project_management_backend.api.controller
                 Id = result.Id,
                 OrganizationId = result.OrganizationId,
                 Name = result.Name,
-                Description = result.Description,
                 Status = result.Status.ToString(),
                 CreatedByUserId = result.CreatedByUserId,
                 CreatedAt = result.CreatedAt,
@@ -268,7 +262,6 @@ namespace project_management_backend.api.controller
                 Id = result.Id,
                 OrganizationId = result.OrganizationId,
                 Name = result.Name,
-                Description = result.Description,
                 Status = result.Status.ToString(),
                 CreatedByUserId = result.CreatedByUserId,
                 CreatedAt = result.CreatedAt,

@@ -35,6 +35,8 @@ public static class ServiceCollectionExtension
         services.AddScoped<IOrganizationMemberRepository, OrganizationMemberRepository>();
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<IProjectMemberRepository, ProjectMemberRepository>();
+        services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+        services.AddScoped<IDepartmentMemberRepository, DepartmentMemberRepository>();
         
         services.AddScoped<IJwtService, JwtService>();
 

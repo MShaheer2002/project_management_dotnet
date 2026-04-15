@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using project_management_backend.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using project_management_backend.Infrastructure.Persistence;
 namespace project_management_backend.Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectManagementDbContext))]
-    partial class ProjectManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260403163210_Added department")]
+    partial class Addeddepartment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -379,6 +382,9 @@ namespace project_management_backend.Infrastructure.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -491,8 +497,6 @@ namespace project_management_backend.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrganizationMemberId");
-
                     b.HasIndex("WorkspaceId");
 
                     b.ToTable("WorkspaceMembers");
@@ -594,19 +598,11 @@ namespace project_management_backend.Infrastructure.Migrations
 
             modelBuilder.Entity("project_management_backend.Domain.Entities.Workspace.WorkspaceMember", b =>
                 {
-                    b.HasOne("project_management_backend.Domain.Entities.Organizations.OrganizationMember", "OrganizationMember")
-                        .WithMany()
-                        .HasForeignKey("OrganizationMemberId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("project_management_backend.Domain.Entities.Workspace.Workspace", "Workspace")
                         .WithMany("Members")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("OrganizationMember");
 
                     b.Navigation("Workspace");
                 });

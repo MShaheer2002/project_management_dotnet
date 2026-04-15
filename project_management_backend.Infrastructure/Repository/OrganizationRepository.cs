@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using project_management_backend.Application.Interface;
 using project_management_backend.Domain.Entities.Organizations;
+using project_management_backend.Domain.Entities.TeamMembers;
+using project_management_backend.Domain.Entities.Teams;
 using project_management_backend.Domain.Entities.Users;
 using project_management_backend.Domain.Entities.Workspace;
 using project_management_backend.Infrastructure.Persistence;
@@ -18,12 +20,7 @@ namespace project_management_backend.Infrastructure.Repository
             this.dbContext = dbContext;
         }
 
-        public async Task<Organization> CreateAsync(
-            Organization organization,
-            OrganizationMember organizationMember,
-            Workspace workspace,
-            WorkspaceMember workspaceMember,
-            CancellationToken cancellationToken)
+        public async Task<Organization> CreateAsync(Organization organization, OrganizationMember organizationMember, Workspace workspace, WorkspaceMember workspaceMember, Team team, TeamMember teamMember, CancellationToken cancellationToken)
         {
             await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
 
@@ -33,6 +30,8 @@ namespace project_management_backend.Infrastructure.Repository
                 await dbContext.OrganizationMembers.AddAsync(organizationMember, cancellationToken);
                 await dbContext.Workspaces.AddAsync(workspace, cancellationToken);
                 await dbContext.WorkspaceMembers.AddAsync(workspaceMember, cancellationToken);
+                await dbContext.Teams.AddAsync(team, cancellationToken);
+                await dbContext.TeamMembers.AddAsync(teamMember, cancellationToken);
 
                 await dbContext.SaveChangesAsync(cancellationToken);
 

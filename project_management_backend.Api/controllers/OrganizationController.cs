@@ -10,6 +10,8 @@ using project_management_backend.Application.Interface;
 using project_management_backend.Infrastructure.Repository;
 using project_management_backend.Domain.Entities.Organizations;
 using project_management_backend.Domain.Entities.Workspace;
+using project_management_backend.Domain.Entities.Teams;
+using project_management_backend.Domain.Entities.TeamMembers;
 
 namespace project_management_backend.api.controller
 {
@@ -64,7 +66,7 @@ namespace project_management_backend.api.controller
             var orgMember = new OrganizationMember(
                 userId,
                 org.Id,
-                OrganizationRole.Admin,
+                OrganizationRole.Owner,
                 userEmail
             );
 
@@ -76,13 +78,20 @@ namespace project_management_backend.api.controller
 
             var workspaceMember = new WorkspaceMember(
                 workspace.Id,
-                organizationMemberId: orgMember.Id,
-                WorkspaceRole.Admin
+                orgMember.Id,
+                WorkspaceRole.Owner
             );
 
+            var team = new Team(
+                org.Id,
+                organizationRequestDto.Name,
+                workspace.Id,
+                userId
+            );
 
+            var teamMember = new TeamMember(team.Id, orgMember.Id, TeamRole.Admin);
 
-            var createOrg = await organizationRepository.CreateAsync(org, orgMember, workspace, workspaceMember, cancellationToken);
+            var createOrg = await organizationRepository.CreateAsync(org, orgMember, workspace, workspaceMember, team, teamMember, cancellationToken);
 
             var organization = new CreateOrganizationResponseDto
             {
@@ -91,7 +100,6 @@ namespace project_management_backend.api.controller
                 OwnerUserId = createOrg.OwnerUserId,
                 Id = createOrg.Id,
                 CreatedAt = createOrg.CreatedAt
-
             };
 
             return Ok(new ApiResponse<CreateOrganizationResponseDto>(true, organization, "Success"));
@@ -256,7 +264,5 @@ namespace project_management_backend.api.controller
             }).ToList();
             return Ok(new ApiResponse<List<GetOrganizationResponseDto>>(true, response, "Organizations retrieved successfully"));
         }
-
-
     };
 }

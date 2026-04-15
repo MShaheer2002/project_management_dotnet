@@ -9,7 +9,8 @@ namespace project_management_backend.Domain.Entities.Teams
         public Guid OrganizationId { get; private set; }
 
         public string Name { get; private set; }
-        public string? Description { get; private set; }
+
+        public Guid WorkspaceId { get; private set; }
 
         public Guid CreatedByUserId { get; private set; }
 
@@ -36,14 +37,13 @@ namespace project_management_backend.Domain.Entities.Teams
 
         private Team() { } // EF
 
-        public Team(Guid organizationId, string name, Guid createdByUserId, string? description = null)
+        public Team(Guid organizationId, string name, Guid workspaceId, Guid createdByUserId)
         {
             Id = Guid.NewGuid();
             OrganizationId = organizationId;
             Name = name;
-            Description = description;
             CreatedByUserId = createdByUserId;
-
+            WorkspaceId = workspaceId;
             Status = TeamStatus.Active;
 
             CreatedAt = DateTime.UtcNow;
@@ -53,7 +53,6 @@ namespace project_management_backend.Domain.Entities.Teams
         public void Update(string name, string? description)
         {
             Name = name;
-            Description = description;
             UpdatedAt = DateTime.UtcNow;
         }
 

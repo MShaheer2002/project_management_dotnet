@@ -1,6 +1,7 @@
 
 
 using Microsoft.EntityFrameworkCore;
+using project_management_backend.Domain.Entities.Department;
 using project_management_backend.Domain.Entities.Issues;
 using project_management_backend.Domain.Entities.Organizations;
 using project_management_backend.Domain.Entities.Project;
@@ -31,6 +32,9 @@ namespace project_management_backend.Infrastructure.Persistence
         public DbSet<TeamMember> TeamMembers { get; set; }
         public DbSet<Workspace> Workspaces { get; set; }
         public DbSet<WorkspaceMember> WorkspaceMembers { get; set; }
+
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<DepartmentMember> DepartmentMembers { get; set; }
 
 
         // Fluent API configurations

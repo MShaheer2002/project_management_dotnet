@@ -1,3 +1,5 @@
+using project_management_backend.Domain.Entities.Organizations;
+
 namespace project_management_backend.Domain.Entities.Workspace
 {
     public class WorkspaceMember
@@ -8,6 +10,7 @@ namespace project_management_backend.Domain.Entities.Workspace
         public Workspace Workspace { get; private set; }
 
         public Guid OrganizationMemberId { get; private set; }
+        public OrganizationMember OrganizationMember { get; private set; }
 
         public WorkspaceRole Role { get; private set; }
 
@@ -38,6 +41,7 @@ namespace project_management_backend.Domain.Entities.Workspace
 
     public enum WorkspaceRole
     {
+        Owner,
         Admin,
         Member,
         Viewer
